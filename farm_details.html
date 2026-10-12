@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Farm Details - Smart Irrigation AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 Smart Irrigation AI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/farm-details">Farm</a>
+
+        <a href="/weather">Weather</a>
+
+        <a href="/prediction?mode=sensorless">
+            Irrigation Prediction
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            👨‍🌾 Farm Details
+        </h1>
+
+        <p>
+            Enter your farm and crop information for
+            personalized irrigation prediction.
+        </p>
+
+    </div>
+
+
+    <!-- FARMER INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            👤 Farmer Information
+        </h2>
+
+
+        <div class="grid">
+
+
+            <div>
+
+                <label for="farmerName">
+                    Farmer Name
+                </label>
+
+                <input
+                    type="text"
+                    id="farmerName"
+                    placeholder="Enter farmer name">
+
+            </div>
+
+
+            <div>
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Enter phone number">
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- FARM INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            🌾 Farm Information
+        </h2>
+
+
+        <div class="grid">
+
+
+            <div>
+
+                <label for="farmName">
+                    Farm Name
+                </label>
+
+                <input
+                    type="text"
+                    id="farmName"
+                    placeholder="Example: Green Farm">
+
+            </div>
+
+
+            <div>
+
+                <label for="area">
+                    Farm Area
+                </label>
+
+                <input
+                    type="number"
+                    id="area"
+                    placeholder="Enter area">
+
+            </div>
+
+
+            <div>
+
+                <label for="areaUnit">
+                    Area Unit
+                </label>
+
+                <select id="areaUnit">
+
+                    <option value="acre">
+                        Acre
+                    </option>
+
+                    <option value="hectare">
+                        Hectare
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="soilType">
+                    Soil Type
+                </label>
+
+                <select id="soilType">
+
+                    <option value="">
+                        Select Soil Type
+                    </option>
+
+                    <option value="Alluvial">
+                        Alluvial
+                    </option>
+
+                    <option value="Black">
+                        Black Soil
+                    </option>
+
+                    <option value="Red">
+                        Red Soil
+                    </option>
+
+                    <option value="Sandy">
+                        Sandy Soil
+                    </option>
+
+                    <option value="Loamy">
+                        Loamy Soil
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- CROP INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            🌱 Crop Information
+        </h2>
+
+
+        <div class="grid">
+
+
+            <div>
+
+                <label for="crop">
+                    Crop
+                </label>
+
+                <select id="crop">
+
+                    <option value="">
+                        Select Crop
+                    </option>
+
+                    <option value="Rice">
+                        Rice
+                    </option>
+
+                    <option value="Wheat">
+                        Wheat
+                    </option>
+
+                    <option value="Maize">
+                        Maize
+                    </option>
+
+                    <option value="Cotton">
+                        Cotton
+                    </option>
+
+                    <option value="Groundnut">
+                        Groundnut
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="growthStage">
+                    Growth Stage
+                </label>
+
+                <select id="growthStage">
+
+                    <option value="">
+                        Select Growth Stage
+                    </option>
+
+                    <option value="Seedling">
+                        Seedling
+                    </option>
+
+                    <option value="Vegetative">
+                        Vegetative
+                    </option>
+
+                    <option value="Flowering">
+                        Flowering
+                    </option>
+
+                    <option value="Maturity">
+                        Maturity
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="irrigationMethod">
+                    Irrigation Method
+                </label>
+
+                <select id="irrigationMethod">
+
+                    <option value="">
+                        Select Method
+                    </option>
+
+                    <option value="Drip">
+                        Drip Irrigation
+                    </option>
+
+                    <option value="Sprinkler">
+                        Sprinkler
+                    </option>
+
+                    <option value="Flood">
+                        Flood Irrigation
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- LOCATION -->
+
+    <div class="card">
+
+        <h2>
+            📍 Farm Location
+        </h2>
+
+        <div class="location-box">
+
+            <p>
+                Location is used to automatically obtain
+                real-time weather information.
+            </p>
+
+            <br>
+
+            <button
+                type="button"
+                onclick="detectLocation()">
+
+                📍 Detect Farm Location
+
+            </button>
+
+
+            <p
+                id="locationStatus"
+                class="location-status">
+
+                Location not detected.
+
+            </p>
+
+
+            <input
+                type="hidden"
+                id="latitude">
+
+            <input
+                type="hidden"
+                id="longitude">
+
+        </div>
+
+    </div>
+
+
+    <!-- SAVE -->
+
+    <div class="card">
+
+        <button
+            type="button"
+            onclick="saveFarmDetails()">
+
+            💾 Save Farm Details
+
+        </button>
+
+
+        <p id="saveMessage"></p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    Smart Irrigation Prediction Using AI 🌱
+
+</footer>
+
+
+<script>
+
+
+/* =====================================================
+   LOCATION
+   ===================================================== */
+
+function detectLocation() {
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "❌ Location is not supported by this browser.";
+
+        return;
+    }
+
+
+    status.innerText =
+        "📍 Detecting farm location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            document.getElementById(
+                "latitude"
+            ).value = latitude;
+
+
+            document.getElementById(
+                "longitude"
+            ).value = longitude;
+
+
+            localStorage.setItem(
+                "latitude",
+                latitude
+            );
+
+
+            localStorage.setItem(
+                "longitude",
+                longitude
+            );
+
+
+            status.innerText =
+                "✅ Farm location detected successfully.";
+
+        },
+
+
+        function(error) {
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                status.innerText =
+                    "⚠️ Location permission is required. Please enable location and try again.";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "❌ Unable to detect location.";
+
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   SAVE FARM DETAILS
+   ===================================================== */
+
+function saveFarmDetails() {
+
+    const farmerName =
+        document.getElementById(
+            "farmerName"
+        ).value.trim();
+
+
+    const phone =
+        document.getElementById(
+            "phone"
+        ).value.trim();
+
+
+    const farmName =
+        document.getElementById(
+            "farmName"
+        ).value.trim();
+
+
+    const area =
+        document.getElementById(
+            "area"
+        ).value;
+
+
+    const areaUnit =
+        document.getElementById(
+            "areaUnit"
+        ).value;
+
+
+    const soilType =
+        document.getElementById(
+            "soilType"
+        ).value;
+
+
+    const crop =
+        document.getElementById(
+            "crop"
+        ).value;
+
+
+    const growthStage =
+        document.getElementById(
+            "growthStage"
+        ).value;
+
+
+    const irrigationMethod =
+        document.getElementById(
+            "irrigationMethod"
+        ).value;
+
+
+    const latitude =
+        document.getElementById(
+            "latitude"
+        ).value;
+
+
+    const longitude =
+        document.getElementById(
+            "longitude"
+        ).value;
+
+
+    if (
+        !farmerName ||
+        !farmName ||
+        !area ||
+        !soilType ||
+        !crop ||
+        !growthStage ||
+        !irrigationMethod
+    ) {
+
+        document.getElementById(
+            "saveMessage"
+        ).innerText =
+            "⚠️ Please fill all required farm details.";
+
+        document.getElementById(
+            "saveMessage"
+        ).className = "error";
+
+        return;
+    }
+
+
+    if (!latitude || !longitude) {
+
+        document.getElementById(
+            "saveMessage"
+        ).innerText =
+            "⚠️ Please detect your farm location.";
+
+        document.getElementById(
+            "saveMessage"
+        ).className = "error";
+
+        return;
+    }
+
+
+    /* Save information locally */
+
+    localStorage.setItem(
+        "farmerName",
+        farmerName
+    );
+
+    localStorage.setItem(
+        "phone",
+        phone
+    );
+
+    localStorage.setItem(
+        "farmName",
+        farmName
+    );
+
+    localStorage.setItem(
+        "area",
+        area
+    );
+
+    localStorage.setItem(
+        "areaUnit",
+        areaUnit
+    );
+
+    localStorage.setItem(
+        "soilType",
+        soilType
+    );
+
+    localStorage.setItem(
+        "crop",
+        crop
+    );
+
+    localStorage.setItem(
+        "growthStage",
+        growthStage
+    );
+
+    localStorage.setItem(
+        "irrigationMethod",
+        irrigationMethod
+    );
+
+
+    document.getElementById(
+        "saveMessage"
+    ).innerText =
+        "✅ Farm details saved successfully!";
+
+    document.getElementById(
+        "saveMessage"
+    ).className = "success";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

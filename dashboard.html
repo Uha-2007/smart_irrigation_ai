@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Smart Irrigation AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 Smart Irrigation AI
+    </div>
+
+    ```html
+<div class="nav-links">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/farm-details">Farm</a>
+    <a href="/weather">Weather</a>
+    <a href="/sensorless">Sensorless Irrigation</a>
+    <a href="/voice-assistant">🎙️ Voice Assistant</a>
+</div>
+```
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+            Smart Irrigation Management 🌾
+        </h1>
+
+        <p>
+            Use real-time weather information and Artificial Intelligence
+            to determine when irrigation is required and estimate the
+            required amount of water.
+        </p>
+
+    </section>
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            Farm Dashboard
+        </h1>
+
+        <p>
+            Monitor your farm and access smart irrigation features.
+        </p>
+
+    </div>
+
+
+    <!-- QUICK FEATURES -->
+
+    <div class="grid">
+
+
+        <!-- FARM -->
+
+        <a href="/farm-details"
+           class="feature-card">
+
+            <div class="feature-icon">
+                👨‍🌾
+            </div>
+
+            <h3>
+                Farm Details
+            </h3>
+
+            <p>
+                Add and manage farmer, farm, crop and
+                growth-stage information.
+            </p>
+
+        </a>
+
+
+        <!-- WEATHER -->
+
+        <a href="/weather"
+           class="feature-card">
+
+            <div class="feature-icon">
+                🌦️
+            </div>
+
+            <h3>
+                Live Weather
+            </h3>
+
+            <p>
+                Automatically get temperature, humidity,
+                rainfall and rain probability using location.
+            </p>
+
+        </a>
+        <a href="/voice-assistant" class="feature-card">
+    <div class="feature-icon">🎙️</div>
+    <h3>Voice Assistant</h3>
+    <p>Interact with Smart Irrigation AI using your voice.</p>
+</a>
+        <!-- SENSORLESS -->
+
+        <a href="/prediction?mode=sensorless"
+           class="feature-card">
+
+            <div class="feature-icon">
+                🤖
+            </div>
+
+            <h3>
+                Sensorless Prediction
+            </h3>
+
+            <p>
+                Predict irrigation requirements using location,
+                weather, crop and growth stage without sensors.
+            </p>
+
+        </a>
+
+    </div>
+
+
+    <!-- SYSTEM FLOW -->
+
+    <div class="card">
+
+        <h2>
+            🔄 How Smart Irrigation Works
+        </h2>
+
+        <div class="grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📍
+                </div>
+
+                <div class="stat-title">
+                    STEP 1
+                </div>
+
+                <div class="stat-value">
+                    Location
+                </div>
+
+                <p>
+                    Farmer location is detected with permission.
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🌦️
+                </div>
+
+                <div class="stat-title">
+                    STEP 2
+                </div>
+
+                <div class="stat-value">
+                    Weather
+                </div>
+
+                <p>
+                    Weather information is collected automatically.
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🤖
+                </div>
+
+                <div class="stat-title">
+                    STEP 3
+                </div>
+
+                <div class="stat-value">
+                    AI Model
+                </div>
+
+                <p>
+                    The trained ML model analyzes the inputs.
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💧
+                </div>
+
+                <div class="stat-title">
+                    STEP 4
+                </div>
+
+                <div class="stat-value">
+                    Irrigation
+                </div>
+
+                <p>
+                    The system recommends irrigation and water quantity.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- IMPORTANT INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            💡 Smart Irrigation AI
+        </h2>
+
+        <p style="line-height:1.7; color:#66736a;">
+
+            The system aims to provide the right amount of water
+            at the right time by combining real-time weather
+            information, agricultural parameters and Artificial
+            Intelligence.
+
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    Smart Irrigation Prediction Using AI 🌱
+
+    <br>
+
+    CSE (AI & ML) Project
+
+</footer>
+
+
+</body>
+
+</html>

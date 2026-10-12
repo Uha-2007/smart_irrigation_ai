@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Irrigation AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         LANGUAGE SELECTION SCREEN
+    ====================================================== -->
+
+    <section id="languageScreen" class="screen">
+
+        <div class="language-card">
+
+            <div class="logo">
+                💧
+            </div>
+
+            <h1>
+                Smart Irrigation AI
+            </h1>
+
+            <p class="subtitle">
+                Smart farming for better irrigation
+            </p>
+
+
+            <h2>
+                Select Your Language
+            </h2>
+
+
+            <div class="language-grid">
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Telugu')">
+
+                    <strong>తెలుగు</strong>
+                    <span>Telugu</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Hindi')">
+
+                    <strong>हिन्दी</strong>
+                    <span>Hindi</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('English')">
+
+                    <strong>English</strong>
+                    <span>English</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Marathi')">
+
+                    <strong>मराठी</strong>
+                    <span>Marathi</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Tamil')">
+
+                    <strong>தமிழ்</strong>
+                    <span>Tamil</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Malayalam')">
+
+                    <strong>മലയാളം</strong>
+                    <span>Malayalam</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Kannada')">
+
+                    <strong>ಕನ್ನಡ</strong>
+                    <span>Kannada</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Japanese')">
+
+                    <strong>日本語</strong>
+                    <span>Japanese</span>
+
+                </button>
+
+
+                <button
+                    class="language-button"
+                    onclick="selectLanguage('Chinese')">
+
+                    <strong>中文</strong>
+                    <span>Chinese</span>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         LOGIN SCREEN
+    ====================================================== -->
+
+    <section id="loginScreen"
+             class="screen hidden">
+
+
+        <div class="login-card">
+
+
+            <!-- LOGO -->
+
+            <div class="logo">
+                💧
+            </div>
+
+
+            <h1>
+                Smart Irrigation AI
+            </h1>
+
+
+            <p class="subtitle">
+                Welcome Farmer
+            </p>
+
+
+
+            <!-- SELECTED LANGUAGE -->
+
+            <div class="selected-language">
+
+                <span>
+                    Selected Language:
+                </span>
+
+                <strong id="selectedLanguage">
+                    English
+                </strong>
+
+
+                <button
+                    type="button"
+                    onclick="changeLanguage()">
+
+                    Change
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MOBILE NUMBER SECTION
+            ================================================== -->
+
+            <div id="phoneSection">
+
+
+                <label for="phoneNumber">
+                    Mobile Number
+                </label>
+
+
+                <div class="phone-input">
+
+
+                    <span class="country-code">
+                        +91
+                    </span>
+
+
+                    <input
+                        type="tel"
+                        id="phoneNumber"
+                        placeholder="Enter 10-digit mobile number"
+                        maxlength="10"
+                        autocomplete="tel">
+
+
+                </div>
+
+
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    onclick="sendOTP()">
+
+                    Send OTP
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 OTP SECTION
+            ================================================== -->
+
+            <div id="otpSection"
+                 class="hidden">
+
+
+                <label for="otpInput">
+                    Enter OTP
+                </label>
+
+
+                <input
+                    type="text"
+                    id="otpInput"
+                    placeholder="Enter 6-digit OTP"
+                    maxlength="6"
+                    inputmode="numeric">
+
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    onclick="verifyOTP()">
+
+                    Verify OTP
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="sendOTP()">
+
+                    Resend OTP
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MESSAGE
+            ================================================== -->
+
+            <p id="message"></p>
+
+
+
+            <!-- =================================================
+                 DEMO OTP
+            ================================================== -->
+
+            <div id="demoOTP"
+                 class="demo-otp hidden">
+
+                Demo OTP:
+
+                <strong id="otpValue">
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+
+        // =====================================================
+        // VARIABLES
+        // =====================================================
+
+        let selectedLanguage = "English";
+
+        let generatedOTP = "";
+
+
+
+        // =====================================================
+        // SELECT LANGUAGE
+        // =====================================================
+
+        function selectLanguage(language) {
+
+
+            selectedLanguage = language;
+
+
+            // Save selected language
+
+            localStorage.setItem(
+                "selectedLanguage",
+                language
+            );
+
+
+            // Display selected language
+
+            document.getElementById(
+                "selectedLanguage"
+            ).innerText = language;
+
+
+            // Hide language screen
+
+            document.getElementById(
+                "languageScreen"
+            ).classList.add("hidden");
+
+
+            // Show login screen
+
+            document.getElementById(
+                "loginScreen"
+            ).classList.remove("hidden");
+
+
+        }
+
+
+
+        // =====================================================
+        // CHANGE LANGUAGE
+        // =====================================================
+
+        function changeLanguage() {
+
+
+            // Hide login
+
+            document.getElementById(
+                "loginScreen"
+            ).classList.add("hidden");
+
+
+            // Show language selection
+
+            document.getElementById(
+                "languageScreen"
+            ).classList.remove("hidden");
+
+
+        }
+
+
+
+        // =====================================================
+        // SEND OTP
+        // =====================================================
+
+        function sendOTP() {
+
+
+            const phone =
+                document.getElementById(
+                    "phoneNumber"
+                ).value.trim();
+
+
+
+            // Validate mobile number
+
+            if (!/^[0-9]{10}$/.test(phone)) {
+
+
+                showMessage(
+                    "Please enter a valid 10-digit mobile number.",
+                    "error"
+                );
+
+
+                return;
+
+            }
+
+
+
+            // Generate 6 digit OTP
+
+            generatedOTP =
+                Math.floor(
+                    100000 +
+                    Math.random() * 900000
+                ).toString();
+
+
+
+            // Show OTP section
+
+            
+            // Hide mobile number section
+            document.getElementById(
+                "phoneSection"
+                ).classList.add("hidden");
+
+            // Show OTP section
+            document.getElementById(
+                "otpSection"
+                ).classList.remove("hidden");
+
+
+            // Show demo OTP
+
+            document.getElementById(
+                "demoOTP"
+            ).classList.remove("hidden");
+
+
+
+            document.getElementById(
+                "otpValue"
+            ).innerText = generatedOTP;
+
+
+
+            // Message
+
+            showMessage(
+                "OTP generated successfully.",
+                "success"
+            );
+
+
+        }
+
+
+
+        // =====================================================
+        // VERIFY OTP
+        // =====================================================
+
+        function verifyOTP() {
+
+
+            const enteredOTP =
+                document.getElementById(
+                    "otpInput"
+                ).value.trim();
+
+
+
+            // Check OTP
+
+            if (enteredOTP === generatedOTP) {
+
+
+                // Save login status
+
+                localStorage.setItem(
+                    "loggedIn",
+                    "true"
+                );
+
+
+
+                // Save language
+
+                localStorage.setItem(
+                    "selectedLanguage",
+                    selectedLanguage
+                );
+
+
+
+                showMessage(
+                    "Login successful!",
+                    "success"
+                );
+
+
+
+                // Go to dashboard
+
+                setTimeout(function() {
+
+
+                    window.location.href =
+                        "/dashboard";
+
+
+                }, 800);
+
+
+            }
+
+
+            else {
+
+
+                showMessage(
+                    "Incorrect OTP. Please try again.",
+                    "error"
+                );
+
+
+            }
+
+        }
+
+
+
+        // =====================================================
+        // SHOW MESSAGE
+        // =====================================================
+
+        function showMessage(
+            message,
+            type
+        ) {
+
+
+            const messageBox =
+                document.getElementById(
+                    "message"
+                );
+
+
+            messageBox.innerText =
+                message;
+
+
+            messageBox.className =
+                type;
+
+
+        }
+
+
+
+        // =====================================================
+        // LOAD SAVED LANGUAGE
+        // =====================================================
+
+        window.onload = function() {
+
+
+            const savedLanguage =
+                localStorage.getItem(
+                    "selectedLanguage"
+                );
+
+
+
+            if (savedLanguage) {
+
+
+                selectedLanguage =
+                    savedLanguage;
+
+
+                document.getElementById(
+                    "selectedLanguage"
+                ).innerText =
+                    savedLanguage;
+
+
+            }
+
+        };
+
+
+    </script>
+
+
+</body>
+
+</html>

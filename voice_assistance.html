@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Voice Assistant</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <h1>🎤 Voice Assistant</h1>
+
+    <p class="subtitle">
+        Ask about your farm, weather and irrigation
+    </p>
+
+
+    <!-- LANGUAGE -->
+
+    <label>🌐 Language</label>
+
+    <select id="language">
+
+        <option value="en-IN">
+            English
+        </option>
+
+        <option value="te-IN">
+            తెలుగు - Telugu
+        </option>
+
+        <option value="hi-IN">
+            हिन्दी - Hindi
+        </option>
+
+        <option value="mr-IN">
+            मराठी - Marathi
+        </option>
+
+        <option value="ta-IN">
+            தமிழ் - Tamil
+        </option>
+
+        <option value="ml-IN">
+            മലയാളം - Malayalam
+        </option>
+
+        <option value="kn-IN">
+            ಕನ್ನಡ - Kannada
+        </option>
+
+        <option value="ja-JP">
+            日本語 - Japanese
+        </option>
+
+        <option value="zh-CN">
+            中文 - Chinese
+        </option>
+
+    </select>
+
+
+    <!-- VOICE BUTTON -->
+
+    <button class="primary-button"
+            onclick="startVoice()">
+
+        🎤 Speak
+
+    </button>
+
+
+    <!-- USER QUESTION -->
+
+    <h2>🗣️ Your Question</h2>
+
+    <p id="question">
+        Press Speak and ask your question...
+    </p>
+
+
+    <!-- ANSWER -->
+
+    <h2>🤖 AI Answer</h2>
+
+    <p id="answer">
+        Your answer will appear here.
+    </p>
+
+
+    <!-- EXAMPLE QUESTIONS -->
+
+    <h2>💡 You Can Ask</h2>
+
+    <p>
+        • Do I need irrigation today?
+    </p>
+
+    <p>
+        • How much water does my crop need?
+    </p>
+
+    <p>
+        • Will it rain today?
+    </p>
+
+    <p>
+        • What is today's weather?
+    </p>
+
+    <p>
+        • How long should I run the pump?
+    </p>
+
+
+    <br>
+
+    <a href="/dashboard">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+
+<script>
+
+function startVoice() {
+
+    if (!("webkitSpeechRecognition" in window)) {
+
+        document.getElementById("answer").textContent =
+            "Voice recognition is not supported in this browser.";
+
+        return;
+    }
+
+
+    const recognition =
+        new webkitSpeechRecognition();
+
+
+    recognition.lang =
+        document.getElementById("language").value;
+
+
+    recognition.start();
+
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+
+        document.getElementById("question")
+            .textContent = text;
+
+
+        /*
+           Later this question will be sent
+           to Python + AI system.
+        */
+
+        document.getElementById("answer")
+            .textContent =
+            "AI is processing your question...";
+
+    };
+
+}
+
+</script>
+
+
+</body>
+</html>

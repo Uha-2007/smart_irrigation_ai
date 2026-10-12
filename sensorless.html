@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sensorless AI - Smart Irrigation</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 Smart Irrigation AI
+    </div>
+
+
+<div class="nav-links">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/farm-details">Farm</a>
+    <a href="/weather">Weather</a>
+    <a href="/sensorless">🌱 Sensorless Irrigation</a>
+</div>
+   
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            🌾 Sensorless AI Irrigation
+        </h1>
+
+        <p>
+            Predict irrigation requirements using
+            location, live weather and crop information.
+        </p>
+
+    </div>
+
+
+    <!-- HOW IT WORKS -->
+
+    <div class="hero">
+
+        <div>
+
+            <p>
+                SENSORLESS INTELLIGENT IRRIGATION
+            </p>
+
+            <h1>
+                No Soil Sensor Required
+            </h1>
+
+            <p>
+                The system uses real-time weather data,
+                crop information and AI to estimate
+                irrigation requirements.
+            </p>
+
+        </div>
+
+        <div style="font-size:70px;">
+            🤖🌱💧
+        </div>
+
+    </div>
+
+
+    <!-- WORKFLOW -->
+
+    <div class="card">
+
+        <h2>
+            🔄 Prediction Workflow
+        </h2>
+
+        <div class="weather-grid">
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    📍
+                </div>
+
+                <h3>
+                    Location
+                </h3>
+
+                <p>
+                    Farm location
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    🌤️
+                </div>
+
+                <h3>
+                    Weather API
+                </h3>
+
+                <p>
+                    Live weather
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    🌾
+                </div>
+
+                <h3>
+                    Crop
+                </h3>
+
+                <p>
+                    Crop & growth stage
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    AI Model
+                </h3>
+
+                <p>
+                    Random Forest
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOCATION -->
+
+    <div class="card">
+
+        <h2>
+            📍 Farm Location
+        </h2>
+
+        <p id="locationStatus">
+            Location not detected.
+        </p>
+
+
+        <button onclick="detectLocation()">
+
+            📍 Detect Farm Location
+
+        </button>
+
+
+        <p id="locationMessage">
+
+            Location is required to obtain
+            real-time weather.
+
+        </p>
+
+    </div>
+
+
+    <!-- WEATHER -->
+
+    <div class="card">
+
+        <h2>
+            🌤️ Real-Time Weather
+        </h2>
+
+
+        <div class="weather-grid">
+
+
+            <div class="weather-item">
+
+                <h3>
+                    🌡️ Temperature
+                </h3>
+
+                <p id="temperature">
+                    -- °C
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>
+                    💧 Humidity
+                </h3>
+
+                <p id="humidity">
+                    -- %
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>
+                    🌧️ Rainfall
+                </h3>
+
+                <p id="rainfall">
+                    -- mm
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>
+                    ☔ Rain Probability
+                </h3>
+
+                <p id="rainProbability">
+                    -- %
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <p id="weatherStatus">
+
+            Weather data not loaded.
+
+        </p>
+
+    </div>
+
+
+    <!-- CROP -->
+
+    <div class="card">
+
+        <h2>
+            🌱 Crop Information
+        </h2>
+
+
+        <div class="grid">
+
+
+            <div>
+
+                <label for="crop">
+                    Crop
+                </label>
+
+                <select id="crop">
+
+                    <option value="">
+                        Select Crop
+                    </option>
+
+                    <option value="Rice">
+                        Rice
+                    </option>
+
+                    <option value="Wheat">
+                        Wheat
+                    </option>
+
+                    <option value="Maize">
+                        Maize
+                    </option>
+
+                    <option value="Cotton">
+                        Cotton
+                    </option>
+
+                    <option value="Groundnut">
+                        Groundnut
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="growthStage">
+                    Growth Stage
+                </label>
+
+                <select id="growthStage">
+                   
+                    <option value="Seedling">Seedling</option>
+                    <option value="Vegetative">Vegetative</option>
+                    <option value="Flowering">Flowering</option>
+                    <option value="Fruiting">Fruiting</option>
+                    <option value="Maturity">Maturity</option>
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- AI INFORMATION -->
+
+    <div class="card">
+
+        <h2>
+            🤖 AI Prediction
+        </h2>
+
+        <p>
+            The Random Forest model analyzes the
+            weather conditions and crop information
+            to determine whether irrigation is required.
+        </p>
+
+
+        <div class="info">
+
+            <strong>
+                AI Inputs
+            </strong>
+
+            <p>
+                Temperature • Humidity • Rainfall •
+                Rain Probability • Crop • Growth Stage
+            </p>
+
+        </div>
+
+
+        <br>
+
+
+        <button onclick="predictIrrigation()">
+
+            🤖 Predict Irrigation
+
+        </button>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="resultSection"
+        class="result-card"
+        style="display:none;">
+
+
+        <h2>
+            🌱 AI Irrigation Result
+        </h2>
+
+
+        <div class="stat-card">
+
+            <h3>
+                Irrigation Status
+            </h3>
+
+            <div
+                id="irrigationResult"
+                style="font-size:34px;font-weight:bold;">
+
+                --
+
+            </div>
+
+        </div>
+
+
+        <div class="weather-grid">
+
+
+            <div class="weather-item">
+
+                <h3>
+                    💧 Water Required
+                </h3>
+
+                <p id="waterRequired">
+                    --
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>
+                    ⏱️ Pump Duration
+                </h3>
+
+                <p id="pumpDuration">
+                    --
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                💡 Recommendation
+            </h3>
+
+            <p id="recommendation">
+                --
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        id="errorMessage"
+        class="error"
+        style="display:none;">
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    Smart Irrigation Prediction Using AI 🌱
+
+</footer>
+
+
+
+<script>
+
+
+let latitude = null;
+
+let longitude = null;
+
+let weatherData = null;
+
+
+/* =====================================================
+   LOCATION
+   ===================================================== */
+
+function detectLocation() {
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+    const message =
+        document.getElementById(
+            "locationMessage"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "❌ Location is not supported.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+        "📍 Detecting farm location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            latitude =
+                position.coords.latitude;
+
+            longitude =
+                position.coords.longitude;
+
+
+            localStorage.setItem(
+                "latitude",
+                latitude
+            );
+
+
+            localStorage.setItem(
+                "longitude",
+                longitude
+            );
+
+
+            status.innerText =
+                "✅ Farm location detected.";
+
+            message.innerText =
+                "Location detected. Loading live weather...";
+
+
+            getWeather();
+
+        },
+
+
+        function(error) {
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                status.innerText =
+                    "❌ Location permission denied.";
+
+                message.innerText =
+                    "⚠️ Please enable location permission and try again.";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "❌ Unable to detect location.";
+
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   WEATHER
+   ===================================================== */
+
+async function getWeather() {
+
+    if (!latitude || !longitude) {
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "weatherStatus"
+    ).innerText =
+        "⏳ Loading live weather...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/weather?latitude=${latitude}&longitude=${longitude}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            data.status !== "success"
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Weather data unavailable."
+            );
+
+        }
+
+
+        weatherData = data;
+
+
+        document.getElementById(
+            "temperature"
+        ).innerText =
+            `${Number(data.temperature).toFixed(1)} °C`;
+
+
+        document.getElementById(
+            "humidity"
+        ).innerText =
+            `${Number(data.humidity).toFixed(0)} %`;
+
+
+        document.getElementById(
+            "rainfall"
+        ).innerText =
+            `${Number(data.rainfall).toFixed(1)} mm`;
+
+
+        document.getElementById(
+            "rainProbability"
+        ).innerText =
+            `${Number(data.rain_probability).toFixed(0)} %`;
+
+
+        document.getElementById(
+            "weatherStatus"
+        ).innerText =
+            "✅ Live weather loaded successfully.";
+
+    }
+
+
+    catch(error) {
+
+        document.getElementById(
+            "weatherStatus"
+        ).innerText =
+            "❌ " + error.message;
+
+    }
+
+}
+
+
+/* =====================================================
+   AI PREDICTION
+   ===================================================== */
+
+async function predictIrrigation() {
+
+    const errorBox =
+        document.getElementById(
+            "errorMessage"
+        );
+
+
+    errorBox.style.display =
+        "none";
+
+
+    const crop =
+        document.getElementById(
+            "crop"
+        ).value;
+
+
+    const growthStage =
+        document.getElementById(
+            "growthStage"
+        ).value;
+
+
+    /* VALIDATION */
+
+    if (!latitude || !longitude) {
+
+        showError(
+            "Please detect your farm location first."
+        );
+
+        return;
+
+    }
+
+
+    if (!weatherData) {
+
+        showError(
+            "Live weather data is not available."
+        );
+
+        return;
+
+    }
+
+
+    if (!crop) {
+
+        showError(
+            "Please select a crop."
+        );
+
+        return;
+
+    }
+
+
+    if (!growthStage) {
+
+        showError(
+            "Please select the crop growth stage."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       SENSORLESS MODE
+
+       No soil moisture sensor is required.
+
+       We use a default/estimated value for the
+       model because the current trained model
+       expects soil_moisture as one of its features.
+    */
+
+
+    const estimatedSoilMoisture =
+        50;
+
+
+    const requestData = {
+
+        temperature:
+            Number(
+                weatherData.temperature
+            ),
+
+        humidity:
+            Number(
+                weatherData.humidity
+            ),
+
+        rainfall:
+            Number(
+                weatherData.rainfall
+            ),
+
+        rain_probability:
+            Number(
+                weatherData.rain_probability
+            ),
+
+        soil_moisture:
+            estimatedSoilMoisture,
+
+        crop:
+            crop,
+
+        growth_stage:
+            growthStage
+
+    };
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/predict",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            requestData
+                        )
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            result.status !== "success"
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Prediction failed."
+            );
+
+        }
+
+
+        /* DISPLAY */
+
+        document.getElementById(
+            "resultSection"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "irrigationResult"
+        ).innerText =
+            result.irrigation;
+
+
+        document.getElementById(
+            "waterRequired"
+        ).innerText =
+            `${result.water_required} litres`;
+
+
+        document.getElementById(
+            "pumpDuration"
+        ).innerText =
+            `${result.pump_duration} minutes`;
+
+
+        document.getElementById(
+            "recommendation"
+        ).innerText =
+            result.recommendation;
+
+
+        document.getElementById(
+            "resultSection"
+        ).scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+    }
+
+
+    catch(error) {
+
+        showError(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+function showError(message) {
+
+    const box =
+        document.getElementById(
+            "errorMessage"
+        );
+
+
+    box.innerText =
+        "⚠️ " + message;
+
+
+    box.style.display =
+        "block";
+
+}
+
+
+/* =====================================================
+   AUTO LOAD SAVED DATA
+   ===================================================== */
+
+window.onload = function() {
+
+
+    /* Location */
+
+    const savedLatitude =
+        localStorage.getItem(
+            "latitude"
+        );
+
+
+    const savedLongitude =
+        localStorage.getItem(
+            "longitude"
+        );
+
+
+    if (
+        savedLatitude &&
+        savedLongitude
+    ) {
+
+        latitude =
+            savedLatitude;
+
+        longitude =
+            savedLongitude;
+
+
+        document.getElementById(
+            "locationStatus"
+        ).innerText =
+            "📍 Saved farm location found.";
+
+
+        getWeather();
+
+    }
+
+
+    /* Crop */
+
+    const savedCrop =
+        localStorage.getItem(
+            "crop"
+        );
+
+
+    const savedStage =
+        localStorage.getItem(
+            "growthStage"
+        );
+
+
+    if (savedCrop) {
+
+        document.getElementById(
+            "crop"
+        ).value =
+            savedCrop;
+
+    }
+
+
+    if (savedStage) {
+
+        document.getElementById(
+            "growthStage"
+        ).value =
+            savedStage;
+
+    }
+
+};
+
+
+</script>
+
+
+</body>
+
+</html>

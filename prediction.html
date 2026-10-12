@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sensor Based AI - Smart Irrigation</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 Smart Irrigation AI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/farm-details">Farm</a>
+
+        <a href="/weather">Weather</a>
+
+        <a href="/prediction?mode=sensor">
+            Sensor Based
+        </a>
+
+        <a href="/prediction?mode=sensorless">
+            Sensorless
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            💧 Sensor Based Irrigation
+        </h1>
+
+        <p>
+            Use real-time weather and soil moisture
+            data to predict irrigation requirements.
+        </p>
+
+    </div>
+
+
+    <!-- SENSOR STATUS -->
+
+    <div class="card">
+
+        <h2>
+            📡 Sensor Connection
+        </h2>
+
+        <div class="location-box">
+
+            <div class="feature-icon">
+                💧
+            </div>
+
+            <h3>
+                Soil Moisture Sensor
+            </h3>
+
+            <p id="sensorStatus">
+                Waiting for sensor data...
+            </p>
+
+            <button
+                onclick="readSensor()">
+
+                🔄 Read Soil Moisture
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SOIL MOISTURE -->
+
+    <div class="card">
+
+        <h2>
+            🌱 Soil Moisture
+        </h2>
+
+        <div class="stat-card">
+
+            <h3>
+                Current Soil Moisture
+            </h3>
+
+            <div
+                id="soilMoistureDisplay"
+                style="font-size:42px;font-weight:bold;">
+
+                -- %
+
+            </div>
+
+            <p>
+                Value provided by soil moisture sensor
+            </p>
+
+        </div>
+
+        <input
+            type="number"
+            id="soilMoisture"
+            placeholder="Enter sensor value (%)"
+            min="0"
+            max="100">
+
+        <p class="info">
+            For now, enter the sensor reading manually.
+            The physical sensor can be connected later.
+        </p>
+
+    </div>
+
+
+    <!-- WEATHER -->
+
+    <div class="card">
+
+        <h2>
+            🌤️ Live Weather Data
+        </h2>
+
+        <div class="weather-grid">
+
+            <div class="weather-item">
+
+                <h3>🌡️ Temperature</h3>
+
+                <p id="temperature">
+                    -- °C
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>💧 Humidity</h3>
+
+                <p id="humidity">
+                    -- %
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>🌧️ Rainfall</h3>
+
+                <p id="rainfall">
+                    -- mm
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <h3>☔ Rain Probability</h3>
+
+                <p id="rainProbability">
+                    -- %
+                </p>
+
+            </div>
+
+        </div>
+
+        <p id="weatherStatus">
+            Weather data not loaded.
+        </p>
+
+    </div>
+
+
+    <!-- CROP DETAILS -->
+
+    <div class="card">
+
+        <h2>
+            🌾 Crop Information
+        </h2>
+
+        <div class="grid">
+
+            <div>
+
+                <label for="crop">
+                    Crop
+                </label>
+
+                <select id="crop">
+
+                    <option value="">
+                        Select Crop
+                    </option>
+
+                    <option value="Rice">
+                        Rice
+                    </option>
+
+                    <option value="Wheat">
+                        Wheat
+                    </option>
+
+                    <option value="Maize">
+                        Maize
+                    </option>
+
+                    <option value="Cotton">
+                        Cotton
+                    </option>
+
+                    <option value="Groundnut">
+                        Groundnut
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label for="growthStage">
+                    Growth Stage
+                </label>
+
+                <select id="growthStage">
+
+                    <option value="">
+                        Select Growth Stage
+                    </option>
+
+                    <option value="Seedling">
+                        Seedling
+                    </option>
+
+                    <option value="Vegetative">
+                        Vegetative
+                    </option>
+
+                    <option value="Flowering">
+                        Flowering
+                    </option>
+
+                    <option value="Maturity">
+                        Maturity
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOCATION -->
+
+    <div class="card">
+
+        <h2>
+            📍 Farm Location
+        </h2>
+
+        <p id="locationStatus">
+            Location not detected.
+        </p>
+
+        <button onclick="detectLocation()">
+
+            📍 Detect Location
+
+        </button>
+
+    </div>
+
+
+    <!-- AI PREDICTION -->
+
+    <div class="card">
+
+        <h2>
+            🤖 AI Irrigation Prediction
+        </h2>
+
+        <p>
+            The Random Forest model will analyze
+            weather, soil moisture, crop and growth stage.
+        </p>
+
+        <button onclick="predictIrrigation()">
+
+            🤖 Predict Irrigation
+
+        </button>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="resultSection"
+        class="result-card"
+        style="display:none;">
+
+        <h2>
+            🌱 AI Result
+        </h2>
+
+        <h3 id="irrigationResult">
+            --
+        </h3>
+
+        <p>
+            💦 Water Required:
+            <strong id="waterRequired">
+                --
+            </strong>
+        </p>
+
+        <p>
+            ⏱️ Pump Duration:
+            <strong id="pumpDuration">
+                --
+            </strong>
+        </p>
+
+        <p id="recommendation">
+            --
+        </p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        id="errorMessage"
+        class="error"
+        style="display:none;">
+
+    </div>
+
+</div>
+
+
+<footer class="footer">
+
+    Smart Irrigation Prediction Using AI 🌱
+
+</footer>
+
+
+<script>
+
+
+let latitude = null;
+let longitude = null;
+
+let weatherData = null;
+
+
+/* =====================================================
+   LOCATION
+   ===================================================== */
+
+function detectLocation() {
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerText =
+            "❌ Location is not supported.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+        "📍 Detecting location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            latitude =
+                position.coords.latitude;
+
+            longitude =
+                position.coords.longitude;
+
+
+            localStorage.setItem(
+                "latitude",
+                latitude
+            );
+
+            localStorage.setItem(
+                "longitude",
+                longitude
+            );
+
+
+            status.innerText =
+                "✅ Location detected.";
+
+            getWeather();
+
+        },
+
+
+        function(error) {
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                status.innerText =
+                    "❌ Location permission denied.";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "❌ Unable to detect location.";
+
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   WEATHER
+   ===================================================== */
+
+async function getWeather() {
+
+    if (!latitude || !longitude) {
+
+        document.getElementById(
+            "weatherStatus"
+        ).innerText =
+            "⚠️ Please detect your location first.";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/weather?latitude=${latitude}&longitude=${longitude}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            data.status !== "success"
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Weather unavailable."
+            );
+
+        }
+
+
+        weatherData = data;
+
+
+        document.getElementById(
+            "temperature"
+        ).innerText =
+            `${Number(data.temperature).toFixed(1)} °C`;
+
+
+        document.getElementById(
+            "humidity"
+        ).innerText =
+            `${Number(data.humidity).toFixed(0)} %`;
+
+
+        document.getElementById(
+            "rainfall"
+        ).innerText =
+            `${Number(data.rainfall).toFixed(1)} mm`;
+
+
+        document.getElementById(
+            "rainProbability"
+        ).innerText =
+            `${Number(data.rain_probability).toFixed(0)} %`;
+
+
+        document.getElementById(
+            "weatherStatus"
+        ).innerText =
+            "✅ Live weather loaded successfully.";
+
+    }
+
+    catch(error) {
+
+        document.getElementById(
+            "weatherStatus"
+        ).innerText =
+            "❌ " + error.message;
+
+    }
+
+}
+
+
+/* =====================================================
+   SENSOR READING
+   ===================================================== */
+
+function readSensor() {
+
+    const input =
+        document.getElementById(
+            "soilMoisture"
+        );
+
+
+    const value =
+        input.value;
+
+
+    if (
+        value === "" ||
+        value < 0 ||
+        value > 100
+    ) {
+
+        document.getElementById(
+            "sensorStatus"
+        ).innerText =
+            "⚠️ Enter a soil moisture value between 0 and 100.";
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "soilMoistureDisplay"
+    ).innerText =
+        `${value} %`;
+
+
+    document.getElementById(
+        "sensorStatus"
+    ).innerText =
+        "✅ Soil moisture sensor reading received.";
+
+}
+
+
+/* =====================================================
+   AI PREDICTION
+   ===================================================== */
+
+async function predictIrrigation() {
+
+    const errorMessage =
+        document.getElementById(
+            "errorMessage"
+        );
+
+
+    errorMessage.style.display =
+        "none";
+
+
+    const soilMoisture =
+        document.getElementById(
+            "soilMoisture"
+        ).value;
+
+
+    const crop =
+        document.getElementById(
+            "crop"
+        ).value;
+
+
+    const growthStage =
+        document.getElementById(
+            "growthStage"
+        ).value;
+
+
+    /* VALIDATION */
+
+    if (!latitude || !longitude) {
+
+        showError(
+            "Please detect your farm location first."
+        );
+
+        return;
+
+    }
+
+
+    if (!weatherData) {
+
+        showError(
+            "Weather data is not available."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        soilMoisture === "" ||
+        soilMoisture < 0 ||
+        soilMoisture > 100
+    ) {
+
+        showError(
+            "Please enter a valid soil moisture value."
+        );
+
+        return;
+
+    }
+
+
+    if (!crop) {
+
+        showError(
+            "Please select a crop."
+        );
+
+        return;
+
+    }
+
+
+    if (!growthStage) {
+
+        showError(
+            "Please select the crop growth stage."
+        );
+
+        return;
+
+    }
+
+
+    /* REQUEST */
+
+    const requestData = {
+
+        temperature:
+            Number(weatherData.temperature),
+
+        humidity:
+            Number(weatherData.humidity),
+
+        rainfall:
+            Number(weatherData.rainfall),
+
+        rain_probability:
+            Number(weatherData.rain_probability),
+
+        soil_moisture:
+            Number(soilMoisture),
+
+        crop:
+            crop,
+
+        growth_stage:
+            growthStage
+
+    };
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/predict",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            requestData
+                        )
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            result.status !== "success"
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Prediction failed."
+            );
+
+        }
+
+
+        /* DISPLAY RESULT */
+
+        document.getElementById(
+            "resultSection"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "irrigationResult"
+        ).innerText =
+            result.irrigation;
+
+
+        document.getElementById(
+            "waterRequired"
+        ).innerText =
+            `${result.water_required} litres`;
+
+
+        document.getElementById(
+            "pumpDuration"
+        ).innerText =
+            `${result.pump_duration} minutes`;
+
+
+        document.getElementById(
+            "recommendation"
+        ).innerText =
+            result.recommendation;
+
+
+        document.getElementById(
+            "resultSection"
+        ).scrollIntoView({
+            behavior: "smooth"
+        });
+
+
+    }
+
+    catch(error) {
+
+        showError(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+function showError(message) {
+
+    const box =
+        document.getElementById(
+            "errorMessage"
+        );
+
+
+    box.innerText =
+        "⚠️ " + message;
+
+
+    box.style.display =
+        "block";
+
+}
+
+
+/* =====================================================
+   AUTO LOAD SAVED LOCATION
+   ===================================================== */
+
+window.onload = function() {
+
+    const savedLatitude =
+        localStorage.getItem(
+            "latitude"
+        );
+
+
+    const savedLongitude =
+        localStorage.getItem(
+            "longitude"
+        );
+
+
+    if (
+        savedLatitude &&
+        savedLongitude
+    ) {
+
+        latitude =
+            savedLatitude;
+
+        longitude =
+            savedLongitude;
+
+
+        document.getElementById(
+            "locationStatus"
+        ).innerText =
+            "📍 Saved farm location found.";
+
+
+        getWeather();
+
+    }
+
+
+    /* Load saved farm data */
+
+    const savedCrop =
+        localStorage.getItem(
+            "crop"
+        );
+
+
+    const savedStage =
+        localStorage.getItem(
+            "growthStage"
+        );
+
+
+    if (savedCrop) {
+
+        document.getElementById(
+            "crop"
+        ).value =
+            savedCrop;
+
+    }
+
+
+    if (savedStage) {
+
+        document.getElementById(
+            "growthStage"
+        ).value =
+            savedStage;
+
+    }
+
+};
+
+</script>
+
+
+</body>
+
+</html>

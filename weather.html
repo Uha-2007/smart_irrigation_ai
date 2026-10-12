@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Live Weather - Smart Irrigation AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌱 Smart Irrigation AI
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/farm-details">Farm</a>
+
+        <a href="/weather">Weather</a>
+
+        <a href="/sensorless">Sensorless Irrigation</a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+            🌤️ Live Weather
+        </h1>
+
+        <p>
+            Real-time weather information from your farm location.
+        </p>
+
+    </div>
+
+
+    <!-- LOCATION -->
+
+    <div class="card">
+
+        <h2>
+            📍 Farm Location
+        </h2>
+
+        <p id="locationMessage">
+
+            Location is required to get live weather.
+
+        </p>
+
+
+        <button
+            onclick="detectLocation()">
+
+            📍 Detect My Location
+
+        </button>
+
+
+        <button
+            onclick="getWeatherAgain()"
+            class="secondary-btn">
+
+            🔄 Refresh Weather
+
+        </button>
+
+
+        <p
+            id="locationStatus"
+            class="location-status">
+
+            Location not detected.
+
+        </p>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+        id="loading"
+        class="card"
+        style="display:none;">
+
+        <h2>
+            ⏳ Getting Weather...
+        </h2>
+
+        <p>
+            Please wait while we retrieve the latest
+            weather information.
+        </p>
+
+    </div>
+
+
+    <!-- WEATHER -->
+
+    <div
+        id="weatherSection"
+        style="display:none;">
+
+
+        <!-- CURRENT CONDITION -->
+
+        <div class="hero">
+
+            <div>
+
+                <p>
+                    CURRENT WEATHER
+                </p>
+
+                <h1 id="weatherCondition">
+                    --
+                </h1>
+
+                <p id="weatherTime">
+                    --
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <div
+                    id="temperature"
+                    style="font-size:48px;font-weight:bold;">
+
+                    --°C
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WEATHER CARDS -->
+
+        <div class="weather-grid">
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    💧
+                </div>
+
+                <h3>
+                    Humidity
+                </h3>
+
+                <p
+                    id="humidity">
+
+                    -- %
+
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    🌧️
+                </div>
+
+                <h3>
+                    Rainfall
+                </h3>
+
+                <p
+                    id="rainfall">
+
+                    -- mm
+
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    ☔
+                </div>
+
+                <h3>
+                    Rain Probability
+                </h3>
+
+                <p
+                    id="rainProbability">
+
+                    -- %
+
+                </p>
+
+            </div>
+
+
+            <div class="weather-item">
+
+                <div class="feature-icon">
+                    💨
+                </div>
+
+                <h3>
+                    Wind Speed
+                </h3>
+
+                <p
+                    id="windSpeed">
+
+                    -- km/h
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- IRRIGATION INFO -->
+
+        <div class="card">
+
+            <h2>
+                🌱 Irrigation Insight
+            </h2>
+
+            <p id="irrigationInsight">
+
+                Weather data will help the AI model
+                determine irrigation requirements.
+
+            </p>
+
+        </div>
+
+
+        <!-- LOCATION COORDINATES -->
+
+        <div class="card">
+
+            <h2>
+                📍 Detected Coordinates
+            </h2>
+
+            <p>
+                Latitude:
+                <strong id="latitudeDisplay">
+                    --
+                </strong>
+            </p>
+
+            <p>
+                Longitude:
+                <strong id="longitudeDisplay">
+                    --
+                </strong>
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        id="errorBox"
+        class="card error"
+        style="display:none;">
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    Smart Irrigation Prediction Using AI 🌱
+
+</footer>
+
+
+
+<script>
+
+
+let currentLatitude = null;
+
+let currentLongitude = null;
+
+
+/* =====================================================
+   DETECT LOCATION
+   ===================================================== */
+
+function detectLocation() {
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+    const message =
+        document.getElementById(
+            "locationMessage"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        message.innerText =
+            "❌ Your browser does not support location.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+        "📍 Detecting your location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            currentLatitude =
+                position.coords.latitude;
+
+            currentLongitude =
+                position.coords.longitude;
+
+
+            localStorage.setItem(
+                "latitude",
+                currentLatitude
+            );
+
+
+            localStorage.setItem(
+                "longitude",
+                currentLongitude
+            );
+
+
+            status.innerText =
+                "✅ Location detected successfully.";
+
+            message.innerText =
+                "Location detected. Getting live weather...";
+
+
+            getWeather(
+                currentLatitude,
+                currentLongitude
+            );
+
+        },
+
+
+        function(error) {
+
+            if (
+                error.code ===
+                error.PERMISSION_DENIED
+            ) {
+
+                status.innerText =
+                    "❌ Location permission denied.";
+
+                message.innerText =
+                    "⚠️ Please enable Location permission in your browser/device settings and try again.";
+
+            }
+
+            else if (
+                error.code ===
+                error.POSITION_UNAVAILABLE
+            ) {
+
+                status.innerText =
+                    "❌ Location unavailable.";
+
+            }
+
+            else {
+
+                status.innerText =
+                    "❌ Unable to detect location.";
+
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   GET WEATHER
+   ===================================================== */
+
+async function getWeather(
+    latitude,
+    longitude
+) {
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+    const weatherSection =
+        document.getElementById(
+            "weatherSection"
+        );
+
+    const errorBox =
+        document.getElementById(
+            "errorBox"
+        );
+
+
+    loading.style.display =
+        "block";
+
+    weatherSection.style.display =
+        "none";
+
+    errorBox.style.display =
+        "none";
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                `/api/weather?latitude=${latitude}&longitude=${longitude}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok ||
+            data.status !== "success") {
+
+            throw new Error(
+                data.message ||
+                "Weather data unavailable."
+            );
+
+        }
+
+
+        /* =========================
+           STORE WEATHER
+           ========================= */
+
+        localStorage.setItem(
+            "weatherData",
+            JSON.stringify(data)
+        );
+
+
+        /* =========================
+           DISPLAY
+           ========================= */
+
+        document.getElementById(
+            "temperature"
+        ).innerText =
+            `${Number(data.temperature).toFixed(1)}°C`;
+
+
+        document.getElementById(
+            "humidity"
+        ).innerText =
+            `${Number(data.humidity).toFixed(0)} %`;
+
+
+        document.getElementById(
+            "rainfall"
+        ).innerText =
+            `${Number(data.rainfall).toFixed(1)} mm`;
+
+
+        document.getElementById(
+            "rainProbability"
+        ).innerText =
+            `${Number(data.rain_probability).toFixed(0)} %`;
+
+
+        document.getElementById(
+            "windSpeed"
+        ).innerText =
+            `${Number(data.wind_speed).toFixed(1)} km/h`;
+
+
+        document.getElementById(
+            "weatherCondition"
+        ).innerText =
+            getWeatherDescription(
+                data.weather_code
+            );
+
+
+        document.getElementById(
+            "weatherTime"
+        ).innerText =
+            `Updated: ${data.time}`;
+
+
+        document.getElementById(
+            "latitudeDisplay"
+        ).innerText =
+            latitude;
+
+
+        document.getElementById(
+            "longitudeDisplay"
+        ).innerText =
+            longitude;
+
+
+        /* =========================
+           IRRIGATION INSIGHT
+           ========================= */
+
+        let insight = "";
+
+
+        if (
+            Number(data.rain_probability) >= 70
+        ) {
+
+            insight =
+                "🌧️ High chance of rain. Irrigation may not be required.";
+
+        }
+
+        else if (
+            Number(data.rainfall) > 2
+        ) {
+
+            insight =
+                "🌧️ Recent rainfall detected. The AI model will consider this before recommending irrigation.";
+
+        }
+
+        else {
+
+            insight =
+                "☀️ No significant rainfall detected. The AI model will evaluate the remaining conditions.";
+
+        }
+
+
+        document.getElementById(
+            "irrigationInsight"
+        ).innerText =
+            insight;
+
+
+        weatherSection.style.display =
+            "block";
+
+
+    }
+
+    catch (error) {
+
+        errorBox.innerText =
+            `❌ ${error.message}`;
+
+        errorBox.style.display =
+            "block";
+
+    }
+
+
+    loading.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   REFRESH WEATHER
+   ===================================================== */
+
+function getWeatherAgain() {
+
+    if (
+        currentLatitude &&
+        currentLongitude
+    ) {
+
+        getWeather(
+            currentLatitude,
+            currentLongitude
+        );
+
+        return;
+
+    }
+
+
+    const savedLatitude =
+        localStorage.getItem(
+            "latitude"
+        );
+
+
+    const savedLongitude =
+        localStorage.getItem(
+            "longitude"
+        );
+
+
+    if (
+        savedLatitude &&
+        savedLongitude
+    ) {
+
+        currentLatitude =
+            savedLatitude;
+
+        currentLongitude =
+            savedLongitude;
+
+
+        getWeather(
+            savedLatitude,
+            savedLongitude
+        );
+
+        return;
+
+    }
+
+
+    detectLocation();
+
+}
+
+
+/* =====================================================
+   WEATHER DESCRIPTION
+   ===================================================== */
+
+function getWeatherDescription(code) {
+
+    code = Number(code);
+
+
+    if (code === 0)
+        return "☀️ Clear Sky";
+
+
+    if (
+        code === 1 ||
+        code === 2
+    )
+        return "🌤️ Partly Cloudy";
+
+
+    if (code === 3)
+        return "☁️ Cloudy";
+
+
+    if (
+        code >= 51 &&
+        code <= 67
+    )
+        return "🌧️ Rain";
+
+
+    if (
+        code >= 71 &&
+        code <= 77
+    )
+        return "❄️ Snow";
+
+
+    if (
+        code >= 80 &&
+        code <= 82
+    )
+        return "🌦️ Rain Showers";
+
+
+    if (
+        code >= 95
+    )
+        return "⛈️ Thunderstorm";
+
+
+    return "🌤️ Weather Data";
+
+}
+
+
+/* =====================================================
+   AUTO LOAD SAVED LOCATION
+   ===================================================== */
+
+window.onload = function() {
+
+    const savedLatitude =
+        localStorage.getItem(
+            "latitude"
+        );
+
+
+    const savedLongitude =
+        localStorage.getItem(
+            "longitude"
+        );
+
+
+    if (
+        savedLatitude &&
+        savedLongitude
+    ) {
+
+        currentLatitude =
+            savedLatitude;
+
+        currentLongitude =
+            savedLongitude;
+
+
+        document.getElementById(
+            "locationStatus"
+        ).innerText =
+            "📍 Saved farm location found.";
+
+
+        getWeather(
+            savedLatitude,
+            savedLongitude
+        );
+
+    }
+
+};
+
+
+</script>
+
+
+</body>
+
+</html>

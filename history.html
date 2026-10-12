@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Irrigation History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <h1>📊 Irrigation History</h1>
+
+    <p class="subtitle">
+        View your previous irrigation predictions
+    </p>
+
+
+    <!-- HISTORY RECORD -->
+
+    <div class="history-item">
+
+        <h3>🌾 Rice</h3>
+
+        <p>
+            📅 Date:
+            <b>--</b>
+        </p>
+
+        <p>
+            📡 Mode:
+            <b>Sensorless</b>
+        </p>
+
+        <p>
+            🌦️ Weather:
+            <b>-- °C | --% Rain</b>
+        </p>
+
+        <p>
+            💧 Irrigation:
+            <b>--</b>
+        </p>
+
+        <p>
+            💦 Water Required:
+            <b>-- L</b>
+        </p>
+
+        <p>
+            ⏱️ Pump Duration:
+            <b>-- minutes</b>
+        </p>
+
+    </div>
+
+
+    <!-- SECOND RECORD -->
+
+    <div class="history-item">
+
+        <h3>🌾 Maize</h3>
+
+        <p>
+            📅 Date:
+            <b>--</b>
+        </p>
+
+        <p>
+            📡 Mode:
+            <b>Sensor Based</b>
+        </p>
+
+        <p>
+            💧 Soil Moisture:
+            <b>--%</b>
+        </p>
+
+        <p>
+            💧 Irrigation:
+            <b>--</b>
+        </p>
+
+        <p>
+            💦 Water Required:
+            <b>-- L</b>
+        </p>
+
+        <p>
+            ⏱️ Pump Duration:
+            <b>-- minutes</b>
+        </p>
+
+    </div>
+
+
+    <button class="primary-button"
+            onclick="clearHistory()">
+
+        Clear History
+
+    </button>
+
+
+    <br><br>
+
+    <a href="/dashboard">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+
+<script>
+
+function clearHistory() {
+
+    alert("History will be cleared when database is connected.");
+
+}
+
+</script>
+
+</body>
+</html>
